@@ -1,10 +1,24 @@
 "use client";
 
-import { Flame, History, LogOut, ShoppingBag, UserIcon, Clock, CheckCircle2, Search, HamburgerIcon, PizzaIcon } from "lucide-react";
+import { Flame, History, LogOut, ShoppingBag, UserIcon, Clock, CheckCircle2, Search, HamburgerIcon, PizzaIcon, CupSodaIcon, Star } from "lucide-react";
+import { HotDogIcon } from "./Icons/HotDog";
 import { useState } from "react";
 import { productsList } from "./data/productsList";
 
 export default function Home() {
+
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredProducts = selectedCategory === 'all'
+    ? productsList
+    : productsList.filter(product => product.category === selectedCategory);
+
+  const searchedProducts = filteredProducts.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col min-h-screen bg-black font-sans overflow-hidden">
       <header className="flex flex-row items-center justify-between w-full px-6 md:px-10 py-6 bg-black/40 backdrop-blur-xl fixed top-0 z-50 border-b border-white/10">
@@ -43,7 +57,6 @@ export default function Home() {
 
       <main className="relative flex flex-col flex-1">
         <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-          {/* Background Image */}
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2000&auto=format&fit=crop" 
@@ -74,8 +87,16 @@ export default function Home() {
             </div>
 
             <div className="mt-16 relative w-full md:w-96">
-              <input type="text" placeholder="Procure aqui" className="w-full p-4 rounded-full bg-white/10 backdrop-blur-2xl text-white border border-white/20 focus:border-orange-500 focus:outline-none placeholder-gray-400 transition-all hover:border-orange-500" />
-              <button className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-full transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
+              <input 
+                type="text" 
+                placeholder="Procure aqui" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full p-4 rounded-full bg-white/10 backdrop-blur-2xl text-white border border-white/20 focus:border-orange-500 focus:outline-none placeholder-gray-400 transition-all hover:border-orange-500" 
+              />
+              <button 
+                onClick={() => setSearchTerm('')}
+                className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-full transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
                 <Search size={24} />
               </button>
             </div>
@@ -88,29 +109,31 @@ export default function Home() {
           <div className="flex flex-row items-center justify-between gap-10">
             <div className="flex flex-row items-center justify-center gap-10">
               <div className="flex flex-1 text-center justify-center items-center gap-6">
-                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
+                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('all')}>
+                <Star size={20} />
                   Todos
                 </button>
-                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
+                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('burgers')}>
                 <HamburgerIcon size={20} />
                   Hambúrgueres
                 </button>
-                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
+                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('pizzas')}>
                 <PizzaIcon size={20} />
                   pizzas
                 </button>
-                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
-                
+                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('hotdogs')}>
+                <HotDogIcon size={20} />
                   hot-dogs
                 </button>
-                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
+                <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('drinks')}>
+                <CupSodaIcon size={20} />
                   bebidas
                 </button>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
-            {productsList.map((product) => (
+            {searchedProducts.map((product) => (
               <div key={product.id} className="p-8 rounded-3xl bg-zinc-900/50 border border-white/5 hover:border-orange-500/30 transition-all group cursor-pointer hover:scale-105 transition-all transform active:scale-95">
                 <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-2xl mb-4" />
                 <h3 className="text-2xl font-black text-white mb-2 group-hover:text-orange-500 transition-colors">{product.name}</h3>

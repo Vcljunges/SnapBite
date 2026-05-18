@@ -216,7 +216,7 @@ export default function Home() {
                 </div>
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row items-center mt-3">
-                    <h3 className="text-2xl font-black text-white mb-2 group-hover:text-orange-500 transition-colors mr-24">{product.name}</h3>
+                    <h3 className="text-2xl font-black text-white mb-2 group mr-24">{product.name}</h3>
                     <Star size={20} fill="#f97316" className="text-orange-500" />
                     <p className="text-orange-500 font-black text-xl">{product.rating}</p>
                   </div>

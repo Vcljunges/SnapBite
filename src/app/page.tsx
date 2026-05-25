@@ -50,7 +50,6 @@ export default function Home() {
       if (saved) {
         setOrders(JSON.parse(saved));
       } else {
-        // Seed demo orders only for user "u1"
         if (currentUser.id === "u1") {
           localStorage.setItem(key, JSON.stringify(ordersList));
           setOrders(ordersList);
@@ -72,7 +71,6 @@ export default function Home() {
     setCheckoutAddress("");
   };
 
-  // Simulate real-time order status updates every 15 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setOrders(prevOrders => {

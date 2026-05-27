@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, History, LogOut, ShoppingBag, UserIcon, Clock, CheckCircle2, Search, HamburgerIcon, PizzaIcon, CupSodaIcon, Star, Plus, X, Trash2, ArrowLeft, CreditCard, DollarSign, UserPlus } from "lucide-react";
+import { Flame, History, LogOut, ShoppingBag, UserIcon, Clock, CheckCircle2, Search, HamburgerIcon, PizzaIcon, CupSodaIcon, Star, Plus, X, Trash2, ArrowLeft, CreditCard, DollarSign, UserPlus, LayoutDashboard } from "lucide-react";
 import { HotDogIcon } from "./Icons/HotDog";
 import { useState, useEffect } from "react";
 import { productsList } from "./data/productsList";
@@ -12,6 +12,7 @@ import { usersList } from "./data/usersList";
 
 export default function Home() {
 
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -28,6 +29,14 @@ export default function Home() {
   const [checkoutNotes, setCheckoutNotes] = useState("");
 
   useEffect(() => {
+    const savedProducts = localStorage.getItem("snapbite_products");
+    if (!savedProducts) {
+      localStorage.setItem("snapbite_products", JSON.stringify(productsList));
+      setProducts(productsList);
+    } else {
+      setProducts(JSON.parse(savedProducts));
+    }
+
     const savedUsers = localStorage.getItem("snapbite_users");
     if (!savedUsers) {
       localStorage.setItem("snapbite_users", JSON.stringify(usersList));
@@ -42,6 +51,21 @@ export default function Home() {
       setCheckoutAddress(parsed.address);
     }
   }, []);
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (currentUser && e.key === `snapbite_orders_${currentUser.id}`) {
+        if (e.newValue) {
+          setOrders(JSON.parse(e.newValue));
+        }
+      }
+      if (e.key === "snapbite_products" && e.newValue) {
+        setProducts(JSON.parse(e.newValue));
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, [currentUser]);
 
   useEffect(() => {
     if (currentUser) {
@@ -200,7 +224,7 @@ export default function Home() {
     setCartItems(prev => {
       let updatedCart = [...prev];
       order.items.forEach(orderItem => {
-        const productInfo = productsList.find(p => p.id === orderItem.productId);
+        const productInfo = products.find(p => p.id === orderItem.productId);
         const existing = updatedCart.find(item => item.id === orderItem.productId);
 
         if (existing) {
@@ -231,8 +255,8 @@ export default function Home() {
   const [productSelected, setProductSelected] = useState<Product | undefined>(undefined);
 
   const filteredProducts = selectedCategory === 'all'
-    ? productsList
-    : productsList.filter(product => product.category === selectedCategory);
+    ? products
+    : products.filter(product => product.category === selectedCategory);
 
   const searchedProducts = filteredProducts.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -273,6 +297,15 @@ export default function Home() {
           </button>
           {currentUser ? (
             <>
+              {currentUser.role === "admin" && (
+                <button 
+                  onClick={() => window.location.href = "/admin"}
+                  className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-all cursor-pointer uppercase tracking-widest transform hover:scale-105 active:scale-95"
+                >
+                  <LayoutDashboard size={20} />
+                  Admin
+                </button>
+              )}
               <div className="flex items-center gap-2 text-sm font-bold text-orange-500 uppercase tracking-widest">
                 <UserIcon size={20} className="bg-orange-500/10 text-orange-500 p-0.5 rounded-md" />
                 Olá, {currentUser.name.split(" ")[0]}

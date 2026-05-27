@@ -9,6 +9,7 @@ import { Order } from "./types/Order";
 import { ordersList } from "./data/ordersList";
 import { User } from "./types/User";
 import { usersList } from "./data/usersList";
+import { toNamespacedPath } from "path";
 
 export default function Home() {
 
@@ -104,7 +105,7 @@ export default function Home() {
             changed = true;
             let nextStatus = "delivered";
             let label = "Entregue";
-            
+
             if (order.status === "pending") {
               nextStatus = "production";
               label = "Em produção";
@@ -118,7 +119,7 @@ export default function Home() {
 
             const now = new Date();
             const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
-            
+
             return {
               ...order,
               status: nextStatus,
@@ -281,14 +282,14 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-black font-sans overflow-hidden">
       <header className="flex flex-row items-center justify-between w-full px-6 md:px-10 py-6 bg-black/40 backdrop-blur-xl fixed top-0 z-50 border-b border-white/10">
         <div className="flex flex-row items-center justify-center gap-4">
-          <h1 className="flex items-center gap-2 text-2xl md:text-3xl font-black text-white tracking-tighter hover:text-orange-500 transition-all">
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 text-2xl md:text-3xl font-black text-white tracking-tighter hover:text-orange-500 transition-all hover:scale-105 active:scale-95 cursor-pointer">
             <Flame size={32} fill="white" className="bg-orange-500 text-white p-1.5 rounded-xl shadow-lg shadow-orange-500/20" />
             SnapBite
-          </h1>
+          </button>
         </div>
-        
+
         <nav className="hidden md:flex flex-row items-center gap-8">
-          <button 
+          <button
             onClick={() => setIsHistoryOpen(true)}
             className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-all cursor-pointer uppercase tracking-widest transform hover:scale-105 active:scale-95"
           >
@@ -298,7 +299,7 @@ export default function Home() {
           {currentUser ? (
             <>
               {currentUser.role === "admin" && (
-                <button 
+                <button
                   onClick={() => window.location.href = "/admin"}
                   className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-all cursor-pointer uppercase tracking-widest transform hover:scale-105 active:scale-95"
                 >
@@ -310,7 +311,7 @@ export default function Home() {
                 <UserIcon size={20} className="bg-orange-500/10 text-orange-500 p-0.5 rounded-md" />
                 Olá, {currentUser.name.split(" ")[0]}
               </div>
-              <button 
+              <button
                 onClick={() => setIsCartOpen(true)}
                 className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded font-black transition-all transform hover:scale-105 active:scale-95 shadow-xl cursor-pointer relative"
               >
@@ -322,7 +323,7 @@ export default function Home() {
                   </span>
                 )}
               </button>
-              <button 
+              <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-red-500 transition-all cursor-pointer uppercase tracking-widest transform hover:scale-105 active:scale-95"
               >
@@ -332,21 +333,21 @@ export default function Home() {
             </>
           ) : (
             <>
-              <button 
-                onClick={() => window.location.href = "/login"} 
+              <button
+                onClick={() => window.location.href = "/login"}
                 className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-all cursor-pointer uppercase tracking-widest transform hover:scale-105 active:scale-95"
               >
                 <UserIcon size={20} />
                 Entrar
               </button>
-              <button 
-                onClick={() => window.location.href = "/register"} 
+              <button
+                onClick={() => window.location.href = "/register"}
                 className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-all cursor-pointer uppercase tracking-widest transform hover:scale-105 active:scale-95"
               >
                 <UserPlus size={20} />
                 Cadastrar
               </button>
-              <button 
+              <button
                 onClick={() => setIsCartOpen(true)}
                 className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded font-black transition-all transform hover:scale-105 active:scale-95 shadow-xl cursor-pointer relative"
               >
@@ -363,14 +364,14 @@ export default function Home() {
         </nav>
 
         <div className="flex md:hidden items-center gap-3">
-          <button 
+          <button
             onClick={() => setIsHistoryOpen(true)}
             className="text-white p-2 hover:text-orange-500 transition-colors cursor-pointer"
           >
             <History size={24} />
           </button>
           {currentUser ? (
-            <button 
+            <button
               onClick={handleLogout}
               className="text-zinc-400 p-2 hover:text-red-500 transition-colors cursor-pointer"
               title="Sair"
@@ -378,7 +379,7 @@ export default function Home() {
               <LogOut size={24} />
             </button>
           ) : (
-            <button 
+            <button
               onClick={() => window.location.href = "/login"}
               className="text-zinc-400 p-2 hover:text-white transition-colors cursor-pointer"
               title="Entrar"
@@ -386,7 +387,7 @@ export default function Home() {
               <UserIcon size={24} />
             </button>
           )}
-          <button 
+          <button
             onClick={() => setIsCartOpen(true)}
             className="text-white p-2 relative hover:text-orange-500 transition-colors cursor-pointer"
           >
@@ -404,7 +405,7 @@ export default function Home() {
         <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2000&auto=format&fit=crop" 
+              src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2000&auto=format&fit=crop"
               className="w-full h-full object-cover scale-105 animate-pulse-slow"
               alt="SnapBite Hero"
             />
@@ -413,7 +414,7 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 flex flex-col items-start justify-center h-full px-6 md:px-20 max-w-7xl mx-auto w-full">
-            
+
             <h1 className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 text-3xl md:text-5xl font-serif text-white tracking-tighter leading-none drop-shadow-2xl uppercase">
               <span className="text-orange-500">SnapBite</span>
               <span>Delivery</span>
@@ -422,24 +423,24 @@ export default function Home() {
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
-                <Clock size={24} className="text-orange-500"/>
+                <Clock size={24} className="text-orange-500" />
                 30-45 MIN
               </button>
               <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter">
-              <CheckCircle2 size={24} className="text-orange-500"/>
+                <CheckCircle2 size={24} className="text-orange-500" />
                 ENTREGA GRÁTIS
               </button>
             </div>
 
             <div className="mt-16 relative w-full md:w-96">
-              <input 
-                type="text" 
-                placeholder="Procure aqui" 
+              <input
+                type="text"
+                placeholder="Procure aqui"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full p-4 rounded-full bg-white/10 backdrop-blur-2xl text-white border border-white/20 focus:border-orange-500 focus:outline-none placeholder-gray-400 transition-all hover:border-orange-500" 
+                className="w-full p-4 rounded-full bg-white/10 backdrop-blur-2xl text-white border border-white/20 focus:border-orange-500 focus:outline-none placeholder-gray-400 transition-all hover:border-orange-500"
               />
-              <button 
+              <button
                 onClick={() => setSearchTerm('')}
                 className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-full transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
                 <Search size={24} />
@@ -455,23 +456,23 @@ export default function Home() {
             <div className="flex flex-row items-center justify-center gap-10">
               <div className="flex flex-1 text-center justify-center items-center gap-6">
                 <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('all')}>
-                <Star size={20} />
+                  <Star size={20} />
                   Todos
                 </button>
                 <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('burgers')}>
-                <HamburgerIcon size={20} />
+                  <HamburgerIcon size={20} />
                   Hambúrgueres
                 </button>
                 <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('pizzas')}>
-                <PizzaIcon size={20} />
+                  <PizzaIcon size={20} />
                   pizzas
                 </button>
                 <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('hotdogs')}>
-                <HotDogIcon size={20} />
+                  <HotDogIcon size={20} />
                   hot-dogs
                 </button>
                 <button className="flex flex-row items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer uppercase tracking-tighter" onClick={() => setSelectedCategory('drinks')}>
-                <CupSodaIcon size={20} />
+                  <CupSodaIcon size={20} />
                   bebidas
                 </button>
               </div>
@@ -485,19 +486,18 @@ export default function Home() {
                 <div className="relative w-full h-48">
                   <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-2xl mb-4" />
                   {product.tag && (
-                    product.tag.toLowerCase() === "novidade" || 
-                    product.tag.toLowerCase() === "novidades" || 
-                    product.tag.toLowerCase() === "mais pedido" || 
+                    product.tag.toLowerCase() === "novidade" ||
+                    product.tag.toLowerCase() === "novidades" ||
+                    product.tag.toLowerCase() === "mais pedido" ||
                     product.tag.toLowerCase() === "mais pedidos"
                   ) && (
-                    <div className={`absolute top-4 left-4 rounded-full px-3 py-1.5 shadow-xl font-black text-xs uppercase tracking-widest ${
-                      product.tag.toLowerCase().includes("pedido") 
-                        ? "bg-red-600 text-white border border-red-500/30" 
-                        : "bg-emerald-500 text-white border border-emerald-400/30"
-                    }`}>
-                      {product.tag}
-                    </div>
-                  )}
+                      <div className={`absolute top-4 left-4 rounded-full px-3 py-1.5 shadow-xl font-black text-xs uppercase tracking-widest ${product.tag.toLowerCase().includes("pedido")
+                          ? "bg-red-600 text-white border border-red-500/30"
+                          : "bg-emerald-500 text-white border border-emerald-400/30"
+                        }`}>
+                        {product.tag}
+                      </div>
+                    )}
                 </div>
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row items-center mt-3">
@@ -516,7 +516,7 @@ export default function Home() {
 
       {isCartOpen && (
         <div className="fixed inset-0 z-[100] flex justify-end">
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-fade-in"
             onClick={() => { setIsCartOpen(false); setIsCheckoutStep(false); }}
           />
@@ -524,7 +524,7 @@ export default function Home() {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               {isCheckoutStep ? (
-                <button 
+                <button
                   onClick={() => setIsCheckoutStep(false)}
                   className="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10 flex items-center justify-center cursor-pointer"
                 >
@@ -546,7 +546,7 @@ export default function Home() {
                   </>
                 )}
               </h2>
-              <button 
+              <button
                 onClick={() => { setIsCartOpen(false); setIsCheckoutStep(false); }}
                 className="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10 cursor-pointer"
               >
@@ -575,21 +575,21 @@ export default function Home() {
                         </div>
                         <div className="flex items-center justify-between mt-3">
                           <div className="flex items-center gap-3 bg-black/40 rounded-lg p-1 border border-white/5">
-                            <button 
+                            <button
                               onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, -1); }}
                               className="text-gray-400 hover:text-white w-7 h-7 flex items-center justify-center rounded-md hover:bg-white/10 transition-colors cursor-pointer"
                             >
                               -
                             </button>
                             <span className="text-white font-medium text-sm w-4 text-center">{item.quantity}</span>
-                            <button 
+                            <button
                               onClick={(e) => { e.stopPropagation(); updateQuantity(item.id, 1); }}
                               className="text-gray-400 hover:text-white w-7 h-7 flex items-center justify-center rounded-md hover:bg-white/10 transition-colors cursor-pointer"
                             >
                               +
                             </button>
                           </div>
-                          <button 
+                          <button
                             onClick={(e) => { e.stopPropagation(); removeFromCart(item.id); }}
                             className="text-red-500/50 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-500/10 cursor-pointer"
                           >
@@ -642,11 +642,10 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setCheckoutPayment("pix")}
-                      className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
-                        checkoutPayment === "pix"
+                      className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${checkoutPayment === "pix"
                           ? "border-orange-500 bg-orange-500/10 text-orange-500"
                           : "border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-white"
-                      }`}
+                        }`}
                     >
                       <DollarSign size={20} />
                       <span className="text-xs font-bold">PIX</span>
@@ -654,11 +653,10 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setCheckoutPayment("credit_card")}
-                      className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
-                        checkoutPayment === "credit_card"
+                      className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${checkoutPayment === "credit_card"
                           ? "border-orange-500 bg-orange-500/10 text-orange-500"
                           : "border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-white"
-                      }`}
+                        }`}
                     >
                       <CreditCard size={20} />
                       <span className="text-xs font-bold">Crédito</span>
@@ -666,11 +664,10 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setCheckoutPayment("debit_card")}
-                      className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
-                        checkoutPayment === "debit_card"
+                      className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${checkoutPayment === "debit_card"
                           ? "border-orange-500 bg-orange-500/10 text-orange-500"
                           : "border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-white"
-                      }`}
+                        }`}
                     >
                       <CreditCard size={20} />
                       <span className="text-xs font-bold">Débito</span>
@@ -710,7 +707,7 @@ export default function Home() {
                   <div className="flex flex-col items-end">
                     <span className="text-3xl font-black text-white">
                       R$ {(
-                        cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) + 
+                        cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) +
                         (isCheckoutStep ? 5.0 : 0.0)
                       ).toFixed(2)}
                     </span>
@@ -718,14 +715,14 @@ export default function Home() {
                   </div>
                 </div>
                 {isCheckoutStep ? (
-                  <button 
+                  <button
                     onClick={handleCheckoutSubmit}
                     className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 text-lg cursor-pointer"
                   >
                     CONFIRMAR E ENVIAR
                   </button>
                 ) : (
-                  <button 
+                  <button
                     onClick={() => setIsCheckoutStep(true)}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 text-lg cursor-pointer"
                   >
@@ -741,7 +738,7 @@ export default function Home() {
       {/* Order History Overlay */}
       {isHistoryOpen && (
         <div className="fixed inset-0 z-[100] flex justify-end">
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-fade-in"
             onClick={() => setIsHistoryOpen(false)}
           />
@@ -752,7 +749,7 @@ export default function Home() {
                 <History className="text-orange-500" />
                 Meus Pedidos
               </h2>
-              <button 
+              <button
                 onClick={() => setIsHistoryOpen(false)}
                 className="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10 cursor-pointer"
               >
@@ -816,82 +813,71 @@ export default function Home() {
                         <div className="flex items-center justify-between relative z-10">
                           {/* Pending Step */}
                           <div className="flex flex-col items-center gap-1.5 flex-1">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${
-                              order.statusHistory.some(h => h.status === "pending")
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${order.statusHistory.some(h => h.status === "pending")
                                 ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20 scale-110"
                                 : "bg-zinc-800 text-gray-500"
-                            }`}>
+                              }`}>
                               📋
                             </div>
-                            <span className={`text-[9px] font-bold tracking-tight uppercase ${
-                              order.statusHistory.some(h => h.status === "pending") ? "text-orange-500" : "text-gray-600"
-                            }`}>Recebido</span>
+                            <span className={`text-[9px] font-bold tracking-tight uppercase ${order.statusHistory.some(h => h.status === "pending") ? "text-orange-500" : "text-gray-600"
+                              }`}>Recebido</span>
                             {order.statusHistory.find(h => h.status === "pending") && (
                               <span className="text-[8px] text-gray-500">{order.statusHistory.find(h => h.status === "pending")?.time}</span>
                             )}
                           </div>
 
                           {/* Line 1 */}
-                          <div className={`h-0.5 flex-1 -mt-5 ${
-                            order.statusHistory.some(h => h.status === "production") ? "bg-orange-500" : "bg-zinc-800"
-                          }`} />
+                          <div className={`h-0.5 flex-1 -mt-5 ${order.statusHistory.some(h => h.status === "production") ? "bg-orange-500" : "bg-zinc-800"
+                            }`} />
 
                           {/* Production Step */}
                           <div className="flex flex-col items-center gap-1.5 flex-1">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${
-                              order.statusHistory.some(h => h.status === "production")
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${order.statusHistory.some(h => h.status === "production")
                                 ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20 scale-110"
                                 : "bg-zinc-800 text-gray-500"
-                            }`}>
+                              }`}>
                               👨‍🍳
                             </div>
-                            <span className={`text-[9px] font-bold tracking-tight uppercase ${
-                              order.statusHistory.some(h => h.status === "production") ? "text-orange-500" : "text-gray-600"
-                            }`}>Produção</span>
+                            <span className={`text-[9px] font-bold tracking-tight uppercase ${order.statusHistory.some(h => h.status === "production") ? "text-orange-500" : "text-gray-600"
+                              }`}>Produção</span>
                             {order.statusHistory.find(h => h.status === "production") && (
                               <span className="text-[8px] text-gray-500">{order.statusHistory.find(h => h.status === "production")?.time}</span>
                             )}
                           </div>
 
                           {/* Line 2 */}
-                          <div className={`h-0.5 flex-1 -mt-5 ${
-                            order.statusHistory.some(h => h.status === "sent") ? "bg-orange-500" : "bg-zinc-800"
-                          }`} />
+                          <div className={`h-0.5 flex-1 -mt-5 ${order.statusHistory.some(h => h.status === "sent") ? "bg-orange-500" : "bg-zinc-800"
+                            }`} />
 
                           {/* Sent Step */}
                           <div className="flex flex-col items-center gap-1.5 flex-1">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${
-                              order.statusHistory.some(h => h.status === "sent")
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${order.statusHistory.some(h => h.status === "sent")
                                 ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20 scale-110"
                                 : "bg-zinc-800 text-gray-500"
-                            }`}>
+                              }`}>
                               🛵
                             </div>
-                            <span className={`text-[9px] font-bold tracking-tight uppercase ${
-                              order.statusHistory.some(h => h.status === "sent") ? "text-orange-500" : "text-gray-600"
-                            }`}>A Caminho</span>
+                            <span className={`text-[9px] font-bold tracking-tight uppercase ${order.statusHistory.some(h => h.status === "sent") ? "text-orange-500" : "text-gray-600"
+                              }`}>A Caminho</span>
                             {order.statusHistory.find(h => h.status === "sent") && (
                               <span className="text-[8px] text-gray-500">{order.statusHistory.find(h => h.status === "sent")?.time}</span>
                             )}
                           </div>
 
                           {/* Line 3 */}
-                          <div className={`h-0.5 flex-1 -mt-5 ${
-                            order.statusHistory.some(h => h.status === "delivered") ? "bg-orange-500" : "bg-zinc-800"
-                          }`} />
+                          <div className={`h-0.5 flex-1 -mt-5 ${order.statusHistory.some(h => h.status === "delivered") ? "bg-orange-500" : "bg-zinc-800"
+                            }`} />
 
                           {/* Delivered Step */}
                           <div className="flex flex-col items-center gap-1.5 flex-1">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${
-                              order.statusHistory.some(h => h.status === "delivered")
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${order.statusHistory.some(h => h.status === "delivered")
                                 ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-110"
                                 : "bg-zinc-800 text-gray-500"
-                            }`}>
+                              }`}>
                               ✅
                             </div>
-                            <span className={`text-[9px] font-bold tracking-tight uppercase ${
-                              order.statusHistory.some(h => h.status === "delivered") ? "text-emerald-500" : "text-gray-600"
-                            }`}>Entregue</span>
+                            <span className={`text-[9px] font-bold tracking-tight uppercase ${order.statusHistory.some(h => h.status === "delivered") ? "text-emerald-500" : "text-gray-600"
+                              }`}>Entregue</span>
                             {order.statusHistory.find(h => h.status === "delivered") && (
                               <span className="text-[8px] text-gray-500">{order.statusHistory.find(h => h.status === "delivered")?.time}</span>
                             )}

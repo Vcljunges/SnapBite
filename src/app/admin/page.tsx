@@ -241,6 +241,10 @@ export default function Admin() {
   };
 
   const handleToggleUserRole = (userId: string) => {
+    if (userId === "admin") {
+      alert("Este é o Administrador Supremo. Seus privilégios não podem ser alterados.");
+      return;
+    }
     if (currentUser && currentUser.id === userId) {
       alert("Você não pode remover seu próprio cargo de administrador.");
       return;
@@ -868,19 +872,26 @@ export default function Admin() {
                               ? "bg-orange-500/10 text-orange-500 border-orange-500/20"
                               : "bg-zinc-800 text-zinc-500 border-zinc-700"
                           }`}>
-                            {u.role === "admin" ? "Administrador" : "Cliente"}
+                            {u.id === "admin" ? "Administrador Principal" : u.role === "admin" ? "Administrador" : "Cliente"}
                           </span>
                         </td>
                         <td className="p-5 text-xs text-zinc-400 max-w-xs truncate" title={u.address}>
                           {u.address}
                         </td>
                         <td className="p-5 text-right">
-                          <button
-                            onClick={() => handleToggleUserRole(u.id)}
-                            className="bg-white/5 hover:bg-white/10 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all border border-white/10 cursor-pointer"
-                          >
-                            Alternar Cargo
-                          </button>
+                          {u.id === "admin" ? (
+                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-wider flex items-center justify-end gap-1.5">
+                              <ShieldAlert size={20} />
+                              Protegido
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleToggleUserRole(u.id)}
+                              className="bg-white/5 hover:bg-white/10 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all border border-white/10 cursor-pointer"
+                            >
+                              Alternar Cargo
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

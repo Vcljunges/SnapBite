@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, History, LogOut, ShoppingBag, UserIcon, Clock, CheckCircle2, Search, HamburgerIcon, PizzaIcon, CupSodaIcon, Star, Plus, X, Trash2, ArrowLeft, CreditCard, DollarSign, UserPlus, LayoutDashboard } from "lucide-react";
+import { Flame, History, LogOut, ShoppingBag, UserIcon, Clock, CheckCircle2, Search, HamburgerIcon, PizzaIcon, CupSodaIcon, Star, Plus, X, Trash2, ArrowLeft, CreditCard, DollarSign, UserPlus, LayoutDashboard, ArrowDown } from "lucide-react";
 import { HotDogIcon } from "./Icons/HotDog";
 import { useState, useEffect } from "react";
 import { productsList } from "./data/productsList";
@@ -22,6 +22,7 @@ export default function Home() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isCheckoutStep, setIsCheckoutStep] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(true);
 
   const [checkoutName, setCheckoutName] = useState("");
   const [checkoutPhone, setCheckoutPhone] = useState("");
@@ -51,6 +52,14 @@ export default function Home() {
       setCheckoutPhone(parsed.phone);
       setCheckoutAddress(parsed.address);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY < 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -448,7 +457,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent pointer-events-none"/>
+          <div
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex justify-center transition-all duration-500"
+            style={{ opacity: showScrollButton ? 1 : 0, pointerEvents: showScrollButton ? 'auto' : 'none' }}
+          >
+            <button
+              onClick={() => {
+                const productsSection = document.querySelector('section:nth-of-type(2)');
+                if (productsSection) productsSection.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="flex flex-row items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-10 py-5 rounded-full font-black text-xl transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <ArrowDown size={24} />
+            </button>
+          </div>
         </section>
 
         <section className="bg-black py-20 px-10 flex flex-col items-center justify-center gap-10">
@@ -934,6 +957,13 @@ export default function Home() {
         }
         .animate-fade-in {
           animation: fade-in 0.3s ease-out forwards;
+        }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 2s ease-in-out infinite;
         }
       `}</style>
     </div>
